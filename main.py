@@ -1,43 +1,31 @@
 from typing import Optional
-
-from pydantic import BaseModel
-
 from fastapi import FastAPI
 
+from pydantic import BaseModel,ConfigDict
+
 app = FastAPI()
-
-
-@app.get("/")
-def root():
-    return {"message": "Hello World"}
-
-# "This will return item_id in String"
-# @app.get("/items/1/{item_id}")
-# def get_item(item_id):
-#     return {"item_id": item_id}
-#
-# "This will return item_id in String"
-# @app.get("/items/2/{item_id}")
-# def get_item(item_id:int):
-#     return {"item_id": item_id}
-
-
-# @app.get("/blogs")
-# def blogs(limit: int = 10,sort: Optional[str] = None):
-#   if sort=="asc":
-#       return {"blogs" : f'{limit} blogs in asc order'}
-#   elif sort=="desc":
-#       return {"blogs" : f'{limit} blogs in desc order'}
-#   else:
-#       return {"blogs" : f'{limit} blogs '}
 
 
 class Blog(BaseModel):
     title: str
     body: str
+    id : int
+    created_by: str
     created_by: Optional[str]
 
-@app.post("/blog")
-def create_blog(blog: Blog):
-    return {"title": blog.title, "body": blog.body}
+blog = Blog(title='My Blog', body='My Blog',id = '25' ,created_by='Tarun')
+
+blog_dict: dict = blog.model_dump()
+print(blog_dict)
+
+class StrictBlog(BaseModel):
+    model_config = ConfigDict(strict=True)
+    title: str
+    body: str
+    id : int
+    created_by: str
+    created_by: Optional[str]
+strict_blog = StrictBlog(title='My Blog', body='My Blog',id = 25 ,created_by='Tarun')
+print(StrictBlog.validate(strict_blog.model_dump()))
+print(strict_blog.model_dump_json())
 
