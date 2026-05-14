@@ -1,7 +1,8 @@
+from dataclasses import Field
 from typing import Optional
 from fastapi import FastAPI
 
-from pydantic import BaseModel,ConfigDict
+from pydantic import BaseModel,ConfigDict,Field
 
 app = FastAPI()
 
@@ -29,3 +30,9 @@ strict_blog = StrictBlog(title='My Blog', body='My Blog',id = 25 ,created_by='Ta
 print(StrictBlog.validate(strict_blog.model_dump()))
 print(strict_blog.model_dump_json())
 
+class StrictBlog2(BaseModel):
+    title: str
+    body: str = Field (min_length=1 , max_length=40)
+    id: int = Field(gt=0)
+    created_by: str
+    created_by: Optional[str]
