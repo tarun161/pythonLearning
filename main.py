@@ -1,3 +1,5 @@
+from typing import Optional
+
 from fastapi import FastAPI
 
 app = FastAPI()
@@ -7,14 +9,24 @@ app = FastAPI()
 def root():
     return {"message": "Hello World"}
 
-"This will return item_id in String"
-@app.get("/items/1/{item_id}")
-def get_item(item_id):
-    return {"item_id": item_id}
+# "This will return item_id in String"
+# @app.get("/items/1/{item_id}")
+# def get_item(item_id):
+#     return {"item_id": item_id}
+#
+# "This will return item_id in String"
+# @app.get("/items/2/{item_id}")
+# def get_item(item_id:int):
+#     return {"item_id": item_id}
 
-"This will return item_id in String"
-@app.get("/items/2/{item_id}")
-def get_item(item_id:int):
-    return {"item_id": item_id}
+
+@app.get("/blogs")
+def blogs(limit: int = 10,sort: Optional[str] = None):
+  if sort=="asc":
+      return {"blogs" : f'{limit} blogs in asc order'}
+  elif sort=="desc":
+      return {"blogs" : f'{limit} blogs in desc order'}
+  else:
+      return {"blogs" : f'{limit} blogs '}
 
 
