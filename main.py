@@ -1,38 +1,17 @@
-from dataclasses import Field
-from typing import Optional
-from fastapi import FastAPI
-
-from pydantic import BaseModel,ConfigDict,Field
-
-app = FastAPI()
+import asyncio
 
 
-class Blog(BaseModel):
-    title: str
-    body: str
-    id : int
-    created_by: str
-    created_by: Optional[str]
+async def couroutine_fun(name : str) -> str:
+    print("Entered couroutine_fun")
+    await asyncio.sleep(0.1);
+    print(f"Finished couroutine_fun for {name}")
 
-blog = Blog(title='My Blog', body='My Blog',id = '25' ,created_by='Tarun')
+async def main() :
+    couroutine_obj = couroutine_fun("tarun")
+    print(couroutine_obj)
+    result = await couroutine_obj
+    print(result)
 
-blog_dict: dict = blog.model_dump()
-print(blog_dict)
+if __name__ == "__main__":
+    asyncio.run(main())
 
-class StrictBlog(BaseModel):
-    model_config = ConfigDict(strict=True)
-    title: str
-    body: str
-    id : int
-    created_by: str
-    created_by: Optional[str]
-strict_blog = StrictBlog(title='My Blog', body='My Blog',id = 25 ,created_by='Tarun')
-print(StrictBlog.validate(strict_blog.model_dump()))
-print(strict_blog.model_dump_json())
-
-class StrictBlog2(BaseModel):
-    title: str
-    body: str = Field (min_length=1 , max_length=40)
-    id: int = Field(gt=0)
-    created_by: str
-    created_by: Optional[str]
